@@ -1,0 +1,12 @@
+# Отчёты аудита не должны попадать в репозиторий
+LINUX_AUDIT_REPORTS/*.txt
+LINUX_AUDIT_REPORTS/*.log
+
+# Временные файлы
+*.tmp
+*.log
+
+# Windows/IDE
+Thumbs.db
+desktop.ini
+.DS_Store

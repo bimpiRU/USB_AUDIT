@@ -1,0 +1,2 @@
+# Treat Nmap installer as binary to avoid diff noise
+nmap_setup.exe binary
