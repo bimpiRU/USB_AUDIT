@@ -1,2 +1,10 @@
+# Force LF for shell scripts and YAML to avoid CRLF issues in Linux/Docker
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Force CRLF for Windows batch files
+*.bat text eol=crlf
+
 # Treat Nmap installer as binary to avoid diff noise
 nmap_setup.exe binary

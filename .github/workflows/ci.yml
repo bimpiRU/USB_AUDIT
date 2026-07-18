@@ -1,0 +1,22 @@
+name: USB_AUDIT CI
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+jobs:
+  test-linux-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build test image
+        run: docker build -f Dockerfile.test -t usb-audit-test .
+
+      - name: Run linux_audit.sh tests
+        run: docker run --rm usb-audit-test
+
+      - name: Shell syntax check
+        run: bash -n linux_audit.sh

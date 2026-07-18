@@ -1,0 +1,28 @@
+Starting Nmap 7.94 ( https://nmap.org ) at 2024-01-01 12:00
+Nmap scan report for 172.22.64.1
+Host is up (0.00052s latency).
+Not shown: 995 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+21/tcp   open  ftp
+22/tcp   open  ssh
+23/tcp   open  telnet
+80/tcp   open  http
+443/tcp  open  https
+445/tcp  open  microsoft-ds
+3389/tcp open  ms-wbt-server
+8080/tcp open  http-proxy
+
+Nmap scan report for router.lan (192.168.1.1)
+Host is up (0.0012s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+80/tcp   open  http
+8080/tcp open  http-proxy
+
+Nmap scan report for 10.0.0.5
+Host is up (0.0030s latency).
+Not shown: 999 closed tcp ports (conn-refused)
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap done: 256 IP addresses (3 hosts up) scanned in 15.40 seconds
