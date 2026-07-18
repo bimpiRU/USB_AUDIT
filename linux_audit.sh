@@ -29,7 +29,7 @@ echo "----------------------------------------------------------------------"
 # [STDIN_CAPTURE] Считываем входящий текстовый лог Nmap, переданный из Windows, и пишем его во временный буфер Linux
 cat > /tmp/win_nmap.txt
 
-:: [VALIDATION_LOG_STREAM] Проверка полноты переданного потока данных
+# [VALIDATION_LOG_STREAM] Проверка полноты переданного потока данных
 if [ ! -s /tmp/win_nmap.txt ]; then
     echo "[-] КРИТИЧЕСКАЯ ОШИБКА: Входящий поток сетевых данных пуст или заблокирован."
     exit 1
@@ -49,7 +49,11 @@ HAS_TARGETS=false
 while read -r line; do
     # Фиксируем появление нового IP-адреса в отчете Nmap
     if [[ "$line" == *"Nmap scan report for"* ]]; then
-        CURRENT_HOST=$(echo "$line" | awk '{print $5}')
+        CURRENT_HOST=$(echo "$line" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | tail -1)
+        # Fallback: если grep не нашел IP (очень редко), берем пятое поле
+        if [ -z "$CURRENT_HOST" ]; then
+            CURRENT_HOST=$(echo "$line" | awk '{print $5}')
+        fi
         echo "[+] Верифицирован активный сетевой узел: $CURRENT_HOST"
         HAS_TARGETS=true
     fi
@@ -118,14 +122,16 @@ try:
     s.settimeout(5)
     print('[+] Пассивный L3-анализатор транзакций сокетов запущен.')
     for _ in range(2):
-        packet = s.recvfrom(65565)
+        packet, addr = s.recvfrom(65565)
         ip_header = packet[0:20]
-        iph = struct.unpack('!BBHHHBBH4s4s' , ip_header)
-        addr_src = socket.inet_ntoa(iph)
-        addr_dst = socket.inet_ntoa(iph)
-        print(f'   [Фиксация пакета] Зафиксирован сетевой обмен: {addr_src} -> {addr_dst}')
+        iph = struct.unpack('!BBHHHBBH4s4s', ip_header)
+        addr_src = socket.inet_ntoa(iph[8])
+        addr_dst = socket.inet_ntoa(iph[9])
+        print('   [Фиксация пакета] Зафиксирован сетевой обмен: %s -> %s' % (addr_src, addr_dst))
+except PermissionError:
+    print('[-] Недостаточно прав для raw-сокетов. Пропускаем пассивный сниффер.')
 except Exception as e:
-    print('[-] Пассивный сбор сетевой телеметрии завершен.')
+    print('[-] Пассивный сбор сетевой телеметрии завершен: %s' % e)
 "
 
 echo "----------------------------------------------------------------------"
